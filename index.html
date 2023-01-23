@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./style.css" rel="stylesheet" />
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <h1>
+          Data Visualization
+        </h1>
+        <div id="nav">
+          <nav>
+              <ul>
+                  <a href="#ancre1"><li>Accueil</li></a>
+                  <a href="#ancre2"><li>Graphique</li></a>
+                  <a href="#ancre3"><li>Affiche</li></a>
+              </ul>
+          </nav>
+      </div>
+        <h2> Dorian Lovichi labs</h2>
+    </header>
+    <main>
+        <section>
+            <div>
+                <h2>
+                    PLUSIEURS STATISTIQUES SUR LES FEUX
+                </h2>
+                <div>
+                <p>
+                  Dans ce graphe nous voyons l'évolution du nombre de feu en Haute-Corse sur l'ensemble de l'année 2020.<br>
+                  Nous voyons logiquement un pic de la courbe durant l'été. Il y a plus de feux de forêts en été parce que les conditions météorologiques sont plus sèches et chaudes,<br> ce qui rend le bois et les herbes plus inflammables.<br> Les tempêtes d'été, comme les orages secs, peuvent également causer des étincelles qui déclenchent des incendies. Les activités humaines, comme la cueillette de champignons, la chasse, les barbecues, et les feux d'artifice, peuvent également contribuer à la survenue d'incendies en été.
+                </p>
+                
+            </div>
+            <div id="ancre2"></div>
+            </div class="a">
+            
+                <div id="chart1" style="width:80%; height:400px">
+                </div>
+
+                <div class="deux">
+
+                  <h2>
+                    SURFACE BRULÉE (EN ha)
+                </h2>
+                <p>Un hectare est une unité de mesure de surface utilisée pour mesurer les terrains.
+                   Il équivaut à 10 000 mètres carrés. Il est souvent utilisé pour mesurer les terrains agricoles et les forêts.
+                   Nous en déduisons donc que les feux de forêts prennent énormément de terrain et qu'il un certain temps avant de revenir à la normale.
+
+
+
+
+                </div>
+              </div class="b">
+              <div id="chart2" style="width:80%; height:400px">
+              </div>
+                <div class="trois">
+                  <h2>
+                    LES CAUSES
+                </h2>
+               
+                <p>Grâce à ce graphique nous voyons que l'immense majorité des plus causes des 
+                  plus gros incendies de Haute-Corse sont causés par la malveillance.
+                  Il faudrait trouver des solutions comme multiplier les messages de préventions
+                  et d'infliger de lourdes sanctions car cela créer un danger pour la nature et même sûrement pour des personnes.
+                </p>
+              </div>
+            </div class="c">
+            <div id="chart3" style="width:80%; height:400px">
+            </div>
+            <div id="ancre3"></div>
+   
+
+        </section>
+    </main>    
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.js"></script>
+    <script>
+        fetch('./incendies.json')
+    .then((response) => response.json())
+    .then((json) => {
+      
+    const groupByMonth = json.reduce((acc, current) => {
+      const mois = current["Alerte"].substring(3,8)
+      if (!acc[mois]) {
+        acc[mois] = []
+      }
+
+      acc[mois].push(current)
+
+      return acc
+      
+      
+    }, {})
+    const groupByDepart = json.reduce((acc, current) => {
+      const mois = current["Département"]
+      if (!acc[mois]) {
+        acc[mois] = []
+      }
+
+      acc[mois].push(current)
+
+      return acc
+      
+      
+    }, {})
+    const groupBySurface = json.reduce((acc, current) => {
+      const mois = current["Surface parcourue (m2)"]
+      if (!acc[mois]) {
+        acc[mois] = []
+      }
+
+      acc[mois].push(current)
+
+      return acc
+      
+      
+    }, {})
+    
+
+
+      // Initialize the echarts instance based on the prepared dom
+    const myChart1 = echarts.init(document.querySelector('#chart1'));
+    const myChart2 = echarts.init(document.querySelector('#chart2'));
+    const myChart3 = echarts.init(document.querySelector('#chart3'));
+
+
+    
+    
+// Specify the configuration items and data for the chart
+const option1 = {
+title: {
+  text: 'Incendies en Haute-Corse par mois en 2020'
+
+},
+tooltip: {},
+legend: {
+  data: ['Mois']
+},
+xAxis: {
+  name: "Mois",
+  data: Object.keys(groupByMonth), // Reécupère les clef d'un objets
+
+},
+yAxis: {},
+series: [
+  {
+    name: 'Incendies',
+    type: 'line',
+    data: [11, 32, 1, 9, 10, 13, 9, 24 , 20, 12, 10, 0 ],
+  }
+]
+};
+
+const option2 = {
+title: {
+  text: 'Les 10 plus gros feux de Haute-Corse en 2020 (surface parcouru en ha).'
+},
+tooltip: {},
+legend: {
+  data: ['Mois']
+},
+xAxis: {
+  name: "Communes",
+  data: ['Montegrosso','Sermano','Pietracorbara','Olmo','Olmeta-di-Tuda','Carcheto-Brustico','Poggio-Mezzana','Castello-di-Rostino','Aghione',1515]
+
+},
+yAxis: {},
+series: [
+  {
+    name: 'Incendies',
+    type: 'bar',
+    data: [
+        
+        { value: 185, name: 'Montegrosso' },
+        { value: 12, name: 'Sermano' },
+        { value: 74, name: 'Pietracorbara	' },
+        { value: 20, name: 'Olmo' },
+        { value: 344, name: 'Olmeta-di-Tuda' },
+        { value: 25, name: 'Carcheto-Brustico' },
+        { value: 20, name: 'Poggio-Mezzana' },
+        { value: 32, name: 'Castello-di-Rostino' },
+        { value: 90, name: 'Aghione' },
+
+      ]
+  }
+]
+};
+
+
+const option3 = {
+  title: {
+  text: 'Les causes des 10 plus gros feux de Haute-Corse en 2020'
+
+},  
+  tooltip: {
+    trigger: 'item'
+  },
+  legend: {
+    top: '5%',
+    left: 'center'
+  },
+  series: [
+    {
+      name: 'Cause de feu',
+      type: 'pie',
+      radius: ['40%', '70%'],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 10,
+        borderColor: '#fff',
+        borderWidth: 2
+      },
+      label: {
+        show: false,
+        position: 'center'
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 40,
+          fontWeight: 'bold'
+        }
+      },
+      labelLine: {
+        show: false
+      },
+      data: [
+        
+        { value: 8, name: 'Malveillance' },
+        { value: 1, name: 'involontaire' },
+        { value: 1, name: 'Ligne éléctrique' },
+       
+
+
+      ]
+    }
+  ]
+};
+
+
+
+
+
+const option4 = {
+  legend: {
+    top: 'bottom'
+  },
+  toolbox: {
+    show: true,
+    feature: {
+      mark: { show: true },
+      dataView: { show: true, readOnly: false },
+      restore: { show: true },
+      saveAsImage: { show: true }
+    }
+  },
+  series: [
+    {
+      name: 'Nightingale Chart',
+      type: 'pie',
+      radius: [50, 250],
+      center: ['50%', '50%'],
+      roseType: 'area',
+      itemStyle: {
+        borderRadius: 8
+      },
+      data: [
+        { value: 40, name: 'rose 1' },
+        { value: 38, name: 'rose 2' },
+        { value: 32, name: 'rose 3' },
+        { value: 30, name: 'rose 4' },
+        { value: 28, name: 'rose 5' },
+        { value: 26, name: 'rose 6' },
+        { value: 22, name: 'rose 7' },
+        { value: 18, name: 'rose 8' }
+      ]
+    }
+  ]
+};
+
+// Display the chart using the configuration items and data just specified.
+myChart1.setOption(option1);
+myChart2.setOption(option2);
+myChart3.setOption(option3);
+
+
+
+    });
+
+
+
+
+
+
+
+
+</script>
+<img src="affiche.jpg">
+</body>
+</html>
